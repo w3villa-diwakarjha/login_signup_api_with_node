@@ -1,14 +1,15 @@
 const User= require('../models/studentModels');
 const auth= require('../userAuth/auth');
 const bcrypt= require('bcrypt');
+const cookie= require('cookie');
 const studentsignupController=async(req,res)=>{
     try{
         console.log(req.body);
-        const userName=req.body;
+        const {userName}= req.body;
         const username= await User.findOne({userName});
+        console.log(username)
         if(!username)
         {
-            console.log("UserName Inside is ==>",username)
             const user= new User(req.body);
             await user.save();
             res.status(201).send(user);
@@ -25,7 +26,6 @@ const studentloginController= async(req,res)=>{
     try{
         const{username,password}=req.body;
         const user= await User.findOne({username});
-        console.log(user.password)
         if(!user){
             return res.status(401).send({error: 'Authentication Failed'})
         }
@@ -33,6 +33,7 @@ const studentloginController= async(req,res)=>{
         if(passwordMatch)
         {
             const token= auth.generateToken(user);
+            res.cookie('token',token,{httpOnly: true});
             res.json({message: 'Login Successful'})
         } else{
             res.status(401).json({error: 'Authentication Failed'});
