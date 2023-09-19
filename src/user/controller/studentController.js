@@ -5,11 +5,12 @@ const cookie= require('cookie');
 const studentsignupController=async(req,res)=>{
     try{
         console.log(req.body);
-        const {userName}= req.body;
-        const username= await User.findOne({userName});
-        console.log(username)
-        if(!username)
+        const {username}= req.body;
+        const userName= await User.findOne({username});
+        console.log(userName)
+        if(!userName)
         {
+            console.log("Inside IF==>",username)
             const user= new User(req.body);
             await user.save();
             res.status(201).send(user);

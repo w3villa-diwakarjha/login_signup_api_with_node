@@ -4,6 +4,7 @@ const bodyparser= require('body-parser');
 const {connectToMongoDB}=require('./connection')
 const dotenv= require('dotenv');
 const cookieParser= require('cookie-parser')
+const cors= require('cors')
 dotenv.config();
 const authenticate= require('./routes/student')
 
@@ -15,6 +16,7 @@ connectToMongoDB(mongodburl)
 .then(()=>{console.log(`MongoDB Connected`)})
 .catch((err)=>{console.log(`Error is ${err}`)});
 
+app.use(cors());
 app.use(bodyparser.json());
 
 app.use('/user', authenticate);
